@@ -8,6 +8,7 @@ PyCharm has a [Copy Reference feature](https://www.jetbrains.com/help/pycharm/wo
 - running the automated tests (Python's `unittest`, Django's `manage.py test`, `pytest`, etc)
 - discussing the reference with other devs (e.g. in Code Reviews)
 - importing the reference in Python REPL
+PyCharm has that feature for a long time. But VS Code [refused](https://github.com/Microsoft/vscode/issues/12518) to implement it. And there's no VS Code extension similar to it yet.
 
 Module/Class/Method/Function Reference
 --------------------------------------
@@ -83,7 +84,7 @@ Assuming that we have `apps/foo/bar.py` file with the given codes. The commented
     For example, when the cursor is placed anywhere in this line:
     `def method_1(self):`
 
-    then, the copied reference will be `apps.foo.bar.Baz.method_1` or `apps/foo/bar.py::Baz::method_1` which could be used to run the that specific test (assuming it is a test case/method). Likewise, a message will be displayed in the status line for better UX:
+    Then, the copied reference will be `apps.foo.bar.Baz.method_1` or `apps/foo/bar.py::Baz::method_1` which could be used to run the that specific test (assuming it is a test case/method). Likewise, a message will be displayed in the status line for better UX:
     `Copied reference: apps.foo.bar.Baz.method_1`
 
     The `pytest` format is included since `pytest` is quite popular. Interestingly, PyCharm [still not addressed](https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000094324-Change-Pycharm-s-Copy-Reference-path-format) the feature request to support the `pytest` format in its `Copy Reference` feature.
