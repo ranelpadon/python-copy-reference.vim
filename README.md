@@ -83,9 +83,11 @@ Assuming that we have `apps/foo/bar.py` file with the given codes. The commented
             pass
     ```
     For example, when the cursor is placed anywhere in this line:
+
     `def method_1(self):`
 
     Then, the copied reference will be `apps.foo.bar.Baz.method_1` or `apps/foo/bar.py::Baz::method_1` which could be used to run the that specific test (assuming it is a test case/method). Likewise, a message will be displayed in the status line for better UX:
+
     `Copied reference: apps.foo.bar.Baz.method_1`
 
     The `pytest` format is included since `pytest` is quite popular. Interestingly, PyCharm [still not addressed](https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000094324-Change-Pycharm-s-Copy-Reference-path-format) the feature request to support the `pytest` format in its `Copy Reference` feature.
