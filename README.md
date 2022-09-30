@@ -2,6 +2,7 @@ python-copy-reference.vim
 =========================
 Inspired by PyCharm's `Copy Reference` feature. Copies the reference of a Python module/class/method/function so that you could discuss it with colleagues or use it to run unit tests in a separate terminal tab/tmux window. Supports the dotted (Python's `unittest`/Django's `manage.py test`) or Pytest format.
 
+
 Introduction
 ------------
 PyCharm has a [Copy Reference feature](https://www.jetbrains.com/help/pycharm/working-with-source-code.html#copy_paste) which creates a reference string for the target Python module/class/method/function name in the current line. The copied reference is useful in various scenarios:
@@ -11,9 +12,11 @@ PyCharm has a [Copy Reference feature](https://www.jetbrains.com/help/pycharm/wo
 
 PyCharm has that feature for a long time. But VS Code [refused](https://github.com/Microsoft/vscode/issues/12518) to implement it. And there's no VS Code extension similar to it yet. This is one of the Vim plugins I was seeking also before, but couldn't find it, so I created it.
 
+
 Module/Class/Method/Function Reference
 --------------------------------------
 Assuming that we have `apps/foo/bar.py` file with the given codes. The commented lines are the copied reference if the cursor is at the line with `def`/`class` keyword.
+
 - Dotted Format (ala-PyCharm)
     ```python
     """
@@ -48,6 +51,7 @@ Assuming that we have `apps/foo/bar.py` file with the given codes. The commented
         def method_1(self):
             pass
     ```
+
 - Pytest Format
     ```python
     """
@@ -92,6 +96,8 @@ Assuming that we have `apps/foo/bar.py` file with the given codes. The commented
 
     The `pytest` format is included since `pytest` is quite popular. Interestingly, PyCharm [still not addressed](https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000094324-Change-Pycharm-s-Copy-Reference-path-format) the feature request to support the `pytest` format in its `Copy Reference` feature.
 
+
+
 Installation
 ------------
 
@@ -101,6 +107,7 @@ Installation
 Plug 'ranelpadon/python-copy-reference.vim'
 ```
 
+
 Mappings
 --------
 There are no default mappings, but could easily create them. For example:
@@ -108,3 +115,8 @@ There are no default mappings, but could easily create them. For example:
 nnoremap <Leader>rd :PythonCopyReferenceDotted<CR>
 nnoremap <Leader>rp :PythonCopyReferencePytest<CR>
 ```
+
+
+Usage
+-----
+Just place the cursor anywhere in the line with your target class/method/function name. Once you pressed your mappings, the reference will be copied in the system clipboard. Then, you could paste it anywhere.
