@@ -17,7 +17,7 @@ Module/Class/Method/Function Reference
 --------------------------------------
 Assuming that we have `apps/foo/bar.py` file with the given codes. The commented lines are the copied reference if the cursor is at the line with `def`/`class` keyword.
 
-- Dotted Format (ala-PyCharm)
+- Dotted Format (ala-PyCharm's `Copy Reference`)
     ```python
     """
     Default value (elsewhere in the file):
