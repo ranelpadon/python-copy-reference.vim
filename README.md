@@ -8,7 +8,8 @@ PyCharm has a [Copy Reference feature](https://www.jetbrains.com/help/pycharm/wo
 - running the automated tests (Python's `unittest`, Django's `manage.py test`, `pytest`, etc)
 - discussing the reference with other devs (e.g. in Code Reviews)
 - importing the reference in Python REPL
-PyCharm has that feature for a long time. But VS Code [refused](https://github.com/Microsoft/vscode/issues/12518) to implement it. And there's no VS Code extension similar to it yet.
+
+PyCharm has that feature for a long time. But VS Code [refused](https://github.com/Microsoft/vscode/issues/12518) to implement it. And there's no VS Code extension similar to it yet. This is one of the Vim plugins I was seeking also before, but couldn't find it, so I created it.
 
 Module/Class/Method/Function Reference
 --------------------------------------
