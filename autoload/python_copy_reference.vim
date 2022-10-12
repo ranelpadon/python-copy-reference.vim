@@ -1,5 +1,5 @@
 function! python_copy_reference#_jump_to_parent()
-    " Inspired by `Python_jump`:
+    " Specialized version of `Python_jump`:
     " https://github.com/vim/vim/blob/v8.2.5172/runtime/ftplugin/python.vim#L88
 
     " Move to the start of line so that inner `def`/`class` will not be included in search.
