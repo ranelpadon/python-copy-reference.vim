@@ -61,30 +61,31 @@ endfunction
 
 function! python_copy_reference#_copy_reference(format)
     " Mark the current cursor/column location.
-    execute 'normal! mx'
+    " Use `X` instead of `x` to minimize collision with user's marks.
+    execute 'normal! mX'
 
     " The cursor could be in an indented/nested function/class/method.
     " So, move the cursor to the start of line to check if it has `def`/`class` keyword.
     execute 'normal! ^'
 
     if a:format == 'dotted'
-        "Path format: foo/bar/baz
+        " Path format (without file extension): foo/bar/baz
         let path_format = '%:r'
         let separator = '.'
     elseif a:format == 'pytest'
-        "Path format: foo/bar/baz.py
+        " Path format (with file extension): foo/bar/baz.py
         let path_format = '%:p:.'
         let separator = '::'
     endif
 
     let reference = python_copy_reference#_get_reference(path_format, separator)
-    echom 'Copied reference: ' . reference
+    echomsg 'Copied reference: ' . reference
 
     " Copy to system clipboard.
     let @+ = reference
 
     " Go back to marked/initial cursor for better UX.
-    execute 'normal! `x'
+    execute 'normal! `X'
 endfunction
 
 
