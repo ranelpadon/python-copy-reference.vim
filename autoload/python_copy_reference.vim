@@ -1,3 +1,5 @@
+let g:python_copy_reference = get(g:, 'python_copy_reference', {})
+
 function! python_copy_reference#_jump_to_parent()
     " Specialized version of `Python_jump`:
     " https://github.com/vim/vim/blob/v8.2.5172/runtime/ftplugin/python.vim#L88
@@ -29,10 +31,10 @@ endfunction
 
 function! python_copy_reference#_get_reference(path_format, separator)
     let file_path = expand(a:path_format)
-    let reference = file_path
+    let reference = python_copy_reference#_relative_path(file_path)
 
     if a:separator == '.'
-        let reference = substitute(file_path, '\/', a:separator, 'g')
+        let reference = substitute(reference, '\/', a:separator, 'g')
     endif
 
     let current_word = expand('<cword>')
@@ -56,6 +58,22 @@ function! python_copy_reference#_get_reference(path_format, separator)
         " Return the file path + function/class + inner function/class/method.
         return reference . a:separator . parent_name . a:separator . name
     endif
+endfunction
+
+function! python_copy_reference#_relative_path(reference)
+  if !has_key(g:python_copy_reference, 'paths')
+    return reference
+  endif
+
+  for path in g:python_copy_reference['paths']
+    let pattern = '^' . path . '/'
+
+    if match(a:reference, pattern) == 0
+      return substitute(a:reference, pattern, "", "g")
+    endif
+  endfor
+
+  return a:reference
 endfunction
 
 

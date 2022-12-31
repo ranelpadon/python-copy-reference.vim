@@ -124,3 +124,11 @@ nnoremap <Leader>rp :PythonCopyReferencePytest<CR>
 Usage
 -----
 Just place the cursor anywhere in the line with your target class/method/function name. Once you pressed your mappings, the reference will be copied in the system clipboard. Then, you could paste it anywhere.
+
+Testing
+-------
+This project uses [Vader](https://github.com/junegunn/vader.vim) to run the tests. After installing Vader, run the tests like this:
+
+```bash
+vim -c 'Vader! test/*'
+```
