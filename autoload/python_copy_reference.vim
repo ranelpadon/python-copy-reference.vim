@@ -62,7 +62,7 @@ endfunction
 
 function! python_copy_reference#_relative_path(reference)
   if !has_key(g:python_copy_reference, 'paths')
-    return reference
+    return a:reference
   endif
 
   for path in g:python_copy_reference['paths']
