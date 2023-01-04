@@ -31,7 +31,7 @@ endfunction
 
 function! python_copy_reference#_get_reference(path_format, separator)
     let file_path = expand(a:path_format)
-    let reference = python_copy_reference#_relative_path(file_path)
+    let reference = python_copy_reference#_remove_prefixes(file_path)
 
     if a:separator == '.'
         let reference = substitute(reference, '\/', a:separator, 'g')
@@ -60,12 +60,12 @@ function! python_copy_reference#_get_reference(path_format, separator)
     endif
 endfunction
 
-function! python_copy_reference#_relative_path(reference)
-  if !has_key(g:python_copy_reference, 'paths')
-    return reference
+function! python_copy_reference#_remove_prefixes(reference)
+  if !has_key(g:python_copy_reference, 'remove_prefixes')
+    return a:reference
   endif
 
-  for path in g:python_copy_reference['paths']
+  for path in g:python_copy_reference['remove_prefixes']
     let pattern = '^' . path . '/'
 
     if match(a:reference, pattern) == 0

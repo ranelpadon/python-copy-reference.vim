@@ -1,0 +1,10 @@
+Do (copy reference):
+  :e some/package/path.py\<cr>
+  :let g:python_copy_reference = {'remove_prefixes': ['some']}\<cr>
+  :call python_copy_reference#dotted()\<cr>
+
+Do (paste reference):
+  "+p
+
+Expect:
+  package.path
