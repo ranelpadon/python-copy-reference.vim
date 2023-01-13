@@ -1,0 +1,10 @@
+Do (copy reference):
+  :e some/package/path.py\<cr>
+  :let g:python_copy_reference = {}\<cr>
+  :call python_copy_reference#pytest()\<cr>
+
+Do (paste reference):
+  "+p
+
+Expect:
+  some/package/path.py
