@@ -29,19 +29,23 @@ function! python_copy_reference#_get_nearest_name()
 endfunction
 
 
-function! python_copy_reference#_get_reference(path_format, separator, allow_nested)
+function! python_copy_reference#_get_module(path_format, separator)
     let file_path = expand(a:path_format)
-    let reference = python_copy_reference#_remove_prefixes(file_path)
+    let module = python_copy_reference#_remove_prefixes(file_path)
 
     if a:separator == '.'
-        let reference = substitute(reference, '\/', a:separator, 'g')
+        let module = substitute(module, '\/', a:separator, 'g')
     endif
 
+    return module
+endfunction
+
+
+function! python_copy_reference#_get_attribute_parts(allow_nested)
     let current_word = expand('<cword>')
     let pattern = '\v^(class|def|async)'
     if match(current_word, pattern) == -1
-        " Return the file path.
-        return reference
+        return []
     endif
 
     let current_column = col('.')
@@ -50,15 +54,15 @@ function! python_copy_reference#_get_reference(path_format, separator, allow_nes
     " `def`/`class` is already at the gutter/edge.
     if current_column == 1
         " Return the file path + function/class.
-        return reference . a:separator . name
+        return [name]
     elseif !a:allow_nested
-        return reference
+        return []
     else
         call python_copy_reference#_jump_to_parent()
         let parent_name = python_copy_reference#_get_nearest_name()
 
         " Return the file path + function/class + inner function/class/method.
-        return reference . a:separator . parent_name . a:separator . name
+        return [parent_name, name]
     endif
 endfunction
 
@@ -105,7 +109,9 @@ function! python_copy_reference#_copy_reference(format)
         let allow_nested = 0
     endif
 
-    let reference = python_copy_reference#_get_reference(path_format, separator, allow_nested)
+    let module = python_copy_reference#_get_module(path_format, separator)
+    let attribute_parts = python_copy_reference#_get_attribute_parts(allow_nested)
+    let reference = join([module] + attribute_parts, separator)
 
     if a:format == 'import'
         " Convert 'x.y.z' into 'x.y import z'
