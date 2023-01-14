@@ -1,5 +1,5 @@
 Do (copy reference):
-  :e some/package/path.py\<cr>
+  :e! some/package/path.py\<cr>
   :let g:python_copy_reference = {}\<cr>
   :call python_copy_reference#dotted()\<cr>
 
@@ -8,3 +8,6 @@ Do (paste reference):
 
 Expect:
   some.package.path
+
+Do (clean up):
+  :%bd!\<cr>
