@@ -83,7 +83,7 @@ function! python_copy_reference#_remove_prefixes(file_path)
 endfunction
 
 
-function! python_copy_reference#_copy_reference(format)
+function! python_copy_reference#_get_reference(format)
     " Mark the current cursor/column location.
     " Use `X` instead of `x` to minimize collision with user's marks.
     execute 'normal! mX'
@@ -113,31 +113,33 @@ function! python_copy_reference#_copy_reference(format)
     let attribute_parts = python_copy_reference#_get_attribute_parts(allow_nested)
     let reference = join([module] + attribute_parts, separator)
 
-    if a:format == 'import'
-        " Convert 'x.y.z' into 'x.y import z'
-        let reference = substitute(reference, '^\(.*\)\.\([^.]*\)$', '\1 import \2', 'g')
-        let reference = 'from ' . reference
-    endif
-
-    " Copy to system clipboard.
-    echomsg 'Copied reference: ' . reference
-    let @+ = reference
-
     " Go back to marked/initial cursor for better UX.
     execute 'normal! `X'
+
+    return reference
 endfunction
 
 
 function! python_copy_reference#dotted()
-    call python_copy_reference#_copy_reference('dotted')
+    let reference = python_copy_reference#_get_reference('dotted')
+    echomsg 'Copied reference: ' . reference
+    let @+ = reference
 endfunction
 
 
 function! python_copy_reference#pytest()
-    call python_copy_reference#_copy_reference('pytest')
+    let reference = python_copy_reference#_get_reference('pytest')
+    echomsg 'Copied reference: ' . reference
+    let @+ = reference
 endfunction
 
 
 function! python_copy_reference#import()
-    call python_copy_reference#_copy_reference('import')
+    let reference = python_copy_reference#_get_reference('import')
+    " Convert 'x.y.z' into 'x.y import z'
+    let reference = substitute(reference, '^\(.*\)\.\([^.]*\)$', '\1 import \2', 'g')
+    let reference = 'from ' . reference
+    " Copy to system clipboard.
+    echomsg 'Copied reference: ' . reference
+    let @+ = reference
 endfunction
