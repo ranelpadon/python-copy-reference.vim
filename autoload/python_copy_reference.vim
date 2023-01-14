@@ -62,20 +62,20 @@ function! python_copy_reference#_get_reference(path_format, separator, allow_nes
     endif
 endfunction
 
-function! python_copy_reference#_remove_prefixes(reference)
+function! python_copy_reference#_remove_prefixes(file_path)
   if !has_key(g:python_copy_reference, 'remove_prefixes')
-    return a:reference
+    return a:file_path
   endif
 
   for path in g:python_copy_reference['remove_prefixes']
     let pattern = '^' . path . '/'
 
-    if match(a:reference, pattern) == 0
-      return substitute(a:reference, pattern, "", "g")
+    if match(a:file_path, pattern) == 0
+      return substitute(a:file_path, pattern, "", "g")
     endif
   endfor
 
-  return a:reference
+  return a:file_path
 endfunction
 
 
