@@ -29,7 +29,7 @@ function! python_copy_reference#_get_nearest_name()
 endfunction
 
 
-function! python_copy_reference#_get_reference(path_format, separator)
+function! python_copy_reference#_get_reference(path_format, separator, allow_nested)
     let file_path = expand(a:path_format)
     let reference = python_copy_reference#_remove_prefixes(file_path)
 
@@ -51,6 +51,8 @@ function! python_copy_reference#_get_reference(path_format, separator)
     if current_column == 1
         " Return the file path + function/class.
         return reference . a:separator . name
+    elseif !a:allow_nested
+        return reference
     else
         call python_copy_reference#_jump_to_parent()
         let parent_name = python_copy_reference#_get_nearest_name()
@@ -90,16 +92,29 @@ function! python_copy_reference#_copy_reference(format)
         " Path format (without file extension): foo/bar/baz
         let path_format = '%:r'
         let separator = '.'
+        let allow_nested = 1
     elseif a:format == 'pytest'
         " Path format (with file extension): foo/bar/baz.py
         let path_format = '%:p:.'
         let separator = '::'
+        let allow_nested = 1
+    elseif a:format == 'import'
+        " Path format (without file extension): foo/bar/baz
+        let path_format = '%:r'
+        let separator = '.'
+        let allow_nested = 0
     endif
 
-    let reference = python_copy_reference#_get_reference(path_format, separator)
-    echomsg 'Copied reference: ' . reference
+    let reference = python_copy_reference#_get_reference(path_format, separator, allow_nested)
+
+    if a:format == 'import'
+        " Convert 'x.y.z' into 'x.y import z'
+        let reference = substitute(reference, '^\(.*\)\.\([^.]*\)$', '\1 import \2', 'g')
+        let reference = 'from ' . reference
+    endif
 
     " Copy to system clipboard.
+    echomsg 'Copied reference: ' . reference
     let @+ = reference
 
     " Go back to marked/initial cursor for better UX.
@@ -114,4 +129,9 @@ endfunction
 
 function! python_copy_reference#pytest()
     call python_copy_reference#_copy_reference('pytest')
+endfunction
+
+
+function! python_copy_reference#import()
+    call python_copy_reference#_copy_reference('import')
 endfunction

@@ -14,3 +14,4 @@ let g:loaded_python_copy_reference = 1
 " Exposes the plugin's functions for use as commands in Vim.
 command! -nargs=0 PythonCopyReferenceDotted call python_copy_reference#dotted()
 command! -nargs=0 PythonCopyReferencePytest call python_copy_reference#pytest()
+command! -nargs=0 PythonCopyReferenceImport call python_copy_reference#import()

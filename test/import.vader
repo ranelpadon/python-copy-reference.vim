@@ -1,0 +1,13 @@
+Do (copy reference):
+  :e! some/package/path.py\<cr>
+  :let g:python_copy_reference = {}\<cr>
+  :call python_copy_reference#import()\<cr>
+
+Do (paste reference):
+  "+p
+
+Expect:
+  from some.package import path
+
+Do (clean up):
+  :%bd!\<cr>
