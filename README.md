@@ -150,9 +150,18 @@ Usage
 -----
 Just place the cursor anywhere in the line with your target class/method/function name. Once you pressed your mappings, the reference will be copied in the system clipboard. Then, you could paste it anywhere.
 
+
+Configuration
+-------------
 You can also optionally configure the behaviour of the plugin using the following settings inside the mapping: `let g:python_copy_reference = {"setting": "value"}`.
 
 - `remove_prefixes` - an array of strings to be removed at the beginning of a copied path e.g. `["src"]`.
+Example:
+```vim
+let g:python_copy_reference = {
+    \ 'remove_prefixes': ['apps', 'conf']
+\ }
+```
 
 Testing
 -------
