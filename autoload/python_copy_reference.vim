@@ -29,19 +29,23 @@ function! python_copy_reference#_get_nearest_name()
 endfunction
 
 
-function! python_copy_reference#_get_reference(path_format, separator)
+function! python_copy_reference#_get_module(path_format, separator)
     let file_path = expand(a:path_format)
-    let reference = python_copy_reference#_remove_prefixes(file_path)
+    let module = python_copy_reference#_remove_prefixes(file_path)
 
     if a:separator == '.'
-        let reference = substitute(reference, '\/', a:separator, 'g')
+        let module = substitute(module, '\/', a:separator, 'g')
     endif
 
+    return module
+endfunction
+
+
+function! python_copy_reference#_get_attribute_parts(allow_nested)
     let current_word = expand('<cword>')
     let pattern = '\v^(class|def|async)'
     if match(current_word, pattern) == -1
-        " Return the file path.
-        return reference
+        return []
     endif
 
     let current_column = col('.')
@@ -50,34 +54,36 @@ function! python_copy_reference#_get_reference(path_format, separator)
     " `def`/`class` is already at the gutter/edge.
     if current_column == 1
         " Return the file path + function/class.
-        return reference . a:separator . name
+        return [name]
+    elseif !a:allow_nested
+        return []
     else
         call python_copy_reference#_jump_to_parent()
         let parent_name = python_copy_reference#_get_nearest_name()
 
         " Return the file path + function/class + inner function/class/method.
-        return reference . a:separator . parent_name . a:separator . name
+        return [parent_name, name]
     endif
 endfunction
 
-function! python_copy_reference#_remove_prefixes(reference)
+function! python_copy_reference#_remove_prefixes(file_path)
   if !has_key(g:python_copy_reference, 'remove_prefixes')
-    return a:reference
+    return a:file_path
   endif
 
   for path in g:python_copy_reference['remove_prefixes']
     let pattern = '^' . path . '/'
 
-    if match(a:reference, pattern) == 0
-      return substitute(a:reference, pattern, "", "g")
+    if match(a:file_path, pattern) == 0
+      return substitute(a:file_path, pattern, "", "g")
     endif
   endfor
 
-  return a:reference
+  return a:file_path
 endfunction
 
 
-function! python_copy_reference#_copy_reference(format)
+function! python_copy_reference#_get_reference(format)
     " Mark the current cursor/column location.
     " Use `X` instead of `x` to minimize collision with user's marks.
     execute 'normal! mX'
@@ -90,28 +96,50 @@ function! python_copy_reference#_copy_reference(format)
         " Path format (without file extension): foo/bar/baz
         let path_format = '%:r'
         let separator = '.'
+        let allow_nested = 1
     elseif a:format == 'pytest'
         " Path format (with file extension): foo/bar/baz.py
         let path_format = '%:p:.'
         let separator = '::'
+        let allow_nested = 1
+    elseif a:format == 'import'
+        " Path format (without file extension): foo/bar/baz
+        let path_format = '%:r'
+        let separator = '.'
+        let allow_nested = 0
     endif
 
-    let reference = python_copy_reference#_get_reference(path_format, separator)
-    echomsg 'Copied reference: ' . reference
-
-    " Copy to system clipboard.
-    let @+ = reference
+    let module = python_copy_reference#_get_module(path_format, separator)
+    let attribute_parts = python_copy_reference#_get_attribute_parts(allow_nested)
+    let reference = join([module] + attribute_parts, separator)
 
     " Go back to marked/initial cursor for better UX.
     execute 'normal! `X'
+
+    return reference
 endfunction
 
 
 function! python_copy_reference#dotted()
-    call python_copy_reference#_copy_reference('dotted')
+    let reference = python_copy_reference#_get_reference('dotted')
+    echomsg 'Copied reference: ' . reference
+    let @+ = reference
 endfunction
 
 
 function! python_copy_reference#pytest()
-    call python_copy_reference#_copy_reference('pytest')
+    let reference = python_copy_reference#_get_reference('pytest')
+    echomsg 'Copied reference: ' . reference
+    let @+ = reference
+endfunction
+
+
+function! python_copy_reference#import()
+    let reference = python_copy_reference#_get_reference('import')
+    " Convert 'x.y.z' into 'x.y import z'
+    let reference = substitute(reference, '^\(.*\)\.\([^.]*\)$', '\1 import \2', 'g')
+    let reference = 'from ' . reference
+    " Copy to system clipboard.
+    echomsg 'Copied reference: ' . reference
+    let @+ = reference
 endfunction

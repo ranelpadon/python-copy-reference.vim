@@ -91,11 +91,35 @@ Assuming that we have `apps/foo/bar.py` file with the given codes. The commented
             pass
     ```
 
+- Import Format
+    ```python
+    """
+    Default value (elsewhere in the file):
+    from apps.foo import bar
+    """
+
+    # from app.foo.bar import function_1
+    def function_1():
+        pass
+
+    # from apps.foo.bar import Baz
+    class Baz():
+
+        # from apps.foo import bar
+        class Meta:
+            pass
+
+        # from apps.foo import bar
+        def method_1(self):
+            pass
+
+    ```
+
 For example, when the cursor is placed anywhere in this line:
 
 `def method_1(self):`
 
-Then, the copied reference will be `apps.foo.bar.Baz.method_1` (or `apps/foo/bar.py::Baz::method_1` depending on the command you invoked) which could be used to run the that specific test (assuming it is a test case/method). Likewise, a message will be displayed in the status line for better UX:
+Then, the copied reference will be `apps.foo.bar.Baz.method_1` (for the Dotted format), which could be used to run the that specific test (assuming it is a test case/method). Likewise, a message will be displayed in the status line for better UX:
 
 `Copied reference: apps.foo.bar.Baz.method_1`
 
@@ -118,6 +142,7 @@ There are no default mappings, but could easily create them. For example:
 ```
 nnoremap <Leader>rd :PythonCopyReferenceDotted<CR>
 nnoremap <Leader>rp :PythonCopyReferencePytest<CR>
+nnoremap <Leader>ri :PythonCopyReferenceImport<CR>
 ```
 
 
