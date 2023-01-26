@@ -139,7 +139,7 @@ Plug 'ranelpadon/python-copy-reference.vim'
 Mappings
 --------
 There are no default mappings, but could easily create them. For example:
-```
+```vim
 nnoremap <Leader>rd :PythonCopyReferenceDotted<CR>
 nnoremap <Leader>rp :PythonCopyReferencePytest<CR>
 nnoremap <Leader>ri :PythonCopyReferenceImport<CR>
@@ -153,15 +153,18 @@ Just place the cursor anywhere in the line with your target class/method/functio
 
 Configuration
 -------------
-You can also optionally configure the behaviour of the plugin using the following settings inside the mapping: `let g:python_copy_reference = {"setting": "value"}`.
+You can also optionally configure the behaviour of the plugin using the following settings inside the mapping: `let g:python_copy_reference = {'setting': 'value'}`.
 
-- `remove_prefixes` - an array of strings to be removed at the beginning of a copied path e.g. `["src"]`.
+- `remove_prefixes` - an array of strings to be removed at the beginning of a copied path e.g. `['src']`.
+
 Example:
+
 ```vim
 let g:python_copy_reference = {
     \ 'remove_prefixes': ['apps', 'conf']
 \ }
 ```
+
 
 Testing
 -------
