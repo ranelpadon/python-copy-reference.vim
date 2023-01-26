@@ -44,6 +44,7 @@ endfunction
 function! python_copy_reference#_get_attribute_parts(allow_nested)
     let current_word = expand('<cword>')
     let pattern = '\v^(class|def|async)'
+
     if match(current_word, pattern) == -1
         return []
     endif
@@ -66,20 +67,21 @@ function! python_copy_reference#_get_attribute_parts(allow_nested)
     endif
 endfunction
 
+
 function! python_copy_reference#_remove_prefixes(file_path)
-  if !has_key(g:python_copy_reference, 'remove_prefixes')
-    return a:file_path
-  endif
-
-  for path in g:python_copy_reference['remove_prefixes']
-    let pattern = '^' . path . '/'
-
-    if match(a:file_path, pattern) == 0
-      return substitute(a:file_path, pattern, "", "g")
+    if !has_key(g:python_copy_reference, 'remove_prefixes')
+        return a:file_path
     endif
-  endfor
 
-  return a:file_path
+    for path in g:python_copy_reference['remove_prefixes']
+        let pattern = '^' . path . '/'
+
+        if match(a:file_path, pattern) == 0
+            return substitute(a:file_path, pattern, '', 'g')
+        endif
+    endfor
+
+    return a:file_path
 endfunction
 
 
@@ -136,9 +138,11 @@ endfunction
 
 function! python_copy_reference#import()
     let reference = python_copy_reference#_get_reference('import')
+
     " Convert 'x.y.z' into 'x.y import z'
     let reference = substitute(reference, '^\(.*\)\.\([^.]*\)$', '\1 import \2', 'g')
     let reference = 'from ' . reference
+
     " Copy to system clipboard.
     echomsg 'Copied reference: ' . reference
     let @+ = reference
