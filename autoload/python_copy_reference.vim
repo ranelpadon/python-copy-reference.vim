@@ -31,6 +31,8 @@ endfunction
 
 function! python_copy_reference#_get_module(path_format, separator)
     let file_path = expand(a:path_format)
+    " Truncate files opened with full paths using CWD.
+    let file_path = fnamemodify(file_path, ":.")
     let module = python_copy_reference#_remove_prefixes(file_path)
 
     if a:separator == '.'
