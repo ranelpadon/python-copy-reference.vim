@@ -15,3 +15,4 @@ let g:loaded_python_copy_reference = 1
 command! -nargs=0 PythonCopyReferenceDotted call python_copy_reference#dotted()
 command! -nargs=0 PythonCopyReferencePytest call python_copy_reference#pytest()
 command! -nargs=0 PythonCopyReferenceImport call python_copy_reference#import()
+command! -nargs=0 PythonCopyReferenceNose call python_copy_reference#nose()

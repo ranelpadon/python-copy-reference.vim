@@ -43,12 +43,12 @@ function! python_copy_reference#_get_module(path_format, separator)
 endfunction
 
 
-function! python_copy_reference#_get_attribute_parts(allow_nested)
+function! python_copy_reference#_get_attributes(allow_nested, separator)
     let current_word = expand('<cword>')
     let pattern = '\v^(class|def|async)'
 
     if match(current_word, pattern) == -1
-        return []
+        return ''
     endif
 
     let current_column = col('.')
@@ -57,15 +57,15 @@ function! python_copy_reference#_get_attribute_parts(allow_nested)
     " `def`/`class` is already at the gutter/edge.
     if current_column == 1
         " Return the file path + function/class.
-        return [name]
+        return name
     elseif !a:allow_nested
-        return []
+        return ''
     else
         call python_copy_reference#_jump_to_parent()
         let parent_name = python_copy_reference#_get_nearest_name()
 
         " Return the file path + function/class + inner function/class/method.
-        return [parent_name, name]
+        return parent_name . a:separator . name
     endif
 endfunction
 
@@ -111,11 +111,21 @@ function! python_copy_reference#_get_reference(format)
         let path_format = '%:r'
         let separator = '.'
         let allow_nested = 0
+    elseif a:format == 'nose'
+        " Path format (without file extension): foo/bar/baz
+        let path_format = '%:r'
+        let separator = '.'
+        let module_attr_separator = ':'
+        let allow_nested = 1
     endif
-
     let module = python_copy_reference#_get_module(path_format, separator)
-    let attribute_parts = python_copy_reference#_get_attribute_parts(allow_nested)
-    let reference = join([module] + attribute_parts, separator)
+    let attributes = python_copy_reference#_get_attributes(allow_nested, separator)
+    if empty(attributes)
+        let reference = module
+    else
+        let module_attr_separator = exists('module_attr_separator') ? module_attr_separator : separator
+        let reference = module . module_attr_separator . attributes
+    endif
 
     " Go back to marked/initial cursor for better UX.
     execute 'normal! `X'
@@ -146,6 +156,13 @@ function! python_copy_reference#import()
     let reference = 'from ' . reference
 
     " Copy to system clipboard.
+    echomsg 'Copied reference: ' . reference
+    let @+ = reference
+endfunction
+
+
+function! python_copy_reference#nose()
+    let reference = python_copy_reference#_get_reference('nose')
     echomsg 'Copied reference: ' . reference
     let @+ = reference
 endfunction
