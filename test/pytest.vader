@@ -11,3 +11,19 @@ Expect:
 
 Do (clean up):
   :%bd!\<cr>
+
+Do (copy reference with attributes):
+  :e! some/package/path.py\<cr>
+  idef SomeClass():\<cr>  def some_function():\<cr>    pass\<esc>
+  k
+  :let g:python_copy_reference = {}\<cr>
+  :call python_copy_reference#pytest()\<cr>
+
+Do (paste reference):
+  "+p
+
+Expect:
+  some/package/path.py::SomeClass::some_function
+
+Do (clean up):
+  :%bd!\<cr>
