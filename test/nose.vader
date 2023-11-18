@@ -1,15 +1,16 @@
 Do (copy reference):
   :e! some/package/path.py\<cr>
   :let g:python_copy_reference = {}\<cr>
-  :call python_copy_reference#pytest()\<cr>
+  :call python_copy_reference#nose()\<cr>
 
 Do (paste reference):
   "+p
 
 Expect:
-  some/package/path.py
+  some.package.path
 
 Do (clean up):
+  let @+ = ''
   :%bd!\<cr>
 
 Do (copy reference with attributes):
@@ -17,13 +18,13 @@ Do (copy reference with attributes):
   idef SomeClass():\<cr>  def some_function():\<cr>    pass\<esc>
   k
   :let g:python_copy_reference = {}\<cr>
-  :call python_copy_reference#pytest()\<cr>
+  :call python_copy_reference#nose()\<cr>
 
 Do (paste reference):
   "+p
 
 Expect:
-  some/package/path.py::SomeClass::some_function
+  some.package.path:SomeClass.some_function
 
 Do (clean up):
   :%bd!\<cr>
